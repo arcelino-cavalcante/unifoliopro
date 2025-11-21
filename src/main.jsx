@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import UniFolioUltimate from './port';
+import BioAcademicaApp from './port';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <UniFolioUltimate />
+    <BioAcademicaApp />
   </React.StrictMode>
 );

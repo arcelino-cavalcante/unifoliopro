@@ -90,7 +90,7 @@ const initialData = {
         showFooter: true,
         showEvents: true,
         showContactCTA: true,
-        salesLink: 'https://unifolio.com'
+        salesLink: '#'
     },
     style: {
         bgType: 'gradient', // gradient, solid
@@ -171,7 +171,7 @@ const initialData = {
     skills: ['React', 'TypeScript', 'Python', 'Scrum', 'Inglês Avançado']
 };
 
-export default function UniFolioUltimate() {
+export default function BioAcademicaApp() {
     const [data, setData] = useState(initialData);
     const [activeSection, setActiveSection] = useState('style');
     const [previewMode, setPreviewMode] = useState('mobile');
@@ -376,7 +376,7 @@ export default function UniFolioUltimate() {
             if (config.avatarShape !== 'modern') return '';
             return `padding: 2px; border-radius: ${modernRadius};`;
         })();
-        const salesLink = config.salesLink || 'https://unifolio.com';
+        const salesLink = config.salesLink || '#';
 
         const htmlContent = `
 <!DOCTYPE html>
@@ -606,11 +606,11 @@ export default function UniFolioUltimate() {
         </script>
         ` : ''}
 
-        ${config.showFooter ? `<footer class="text-center text-[10px] py-8 opacity-40 animate-enter" style="animation-delay: 600ms"><p>Criado com UniFolio</p></footer>` : ''}
+        ${config.showFooter ? `<footer class="text-center text-[10px] py-8 opacity-40 animate-enter" style="animation-delay: 600ms"><p>Criado com BioAcademica</p></footer>` : ''}
 
         ${config.showContactCTA && data.contact.whatsapp ? `
         <a
-          href="${`https://wa.me/${(data.contact.whatsapp || '').replace(/\D/g, '')}?text=${encodeURIComponent('Oi! Vi seu UniFolio e gostaria de conversar.')}`}"
+          href="${`https://wa.me/${(data.contact.whatsapp || '').replace(/\D/g, '')}?text=${encodeURIComponent('Oi! Vi seu BioAcademica e gostaria de conversar.')}`}"
           target="_blank"
           rel="noreferrer"
           class="fixed right-5 bottom-5 z-40 flex items-center gap-2 px-4 py-3 rounded-full shadow-lg text-white"
@@ -623,7 +623,7 @@ export default function UniFolioUltimate() {
 
         <div class="mt-10 mb-6 text-center text-[11px] opacity-60">
             <a href="${salesLink}" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 text-gray-600 hover:text-indigo-700 font-semibold">
-                Feito com UniFolio · Quero o meu
+                Feito com BioAcademica · Quero o meu
             </a>
         </div>
     </main>
@@ -634,7 +634,7 @@ export default function UniFolioUltimate() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `unifolio-${data.profile.name.replace(/\s+/g, '-').toLowerCase()}.html`;
+        a.download = `bioacademica-${data.profile.name.replace(/\s+/g, '-').toLowerCase()}.html`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -646,7 +646,7 @@ export default function UniFolioUltimate() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'unifolio-backup.json';
+        a.download = 'bioacademica-backup.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -676,7 +676,7 @@ export default function UniFolioUltimate() {
 
     const getWhatsAppLink = () => {
         const phone = (data.contact.whatsapp || '').replace(/\D/g, '');
-        const message = encodeURIComponent('Oi! Vi seu UniFolio e gostaria de conversar.');
+        const message = encodeURIComponent('Oi! Vi seu BioAcademica e gostaria de conversar.');
         return phone ? `https://wa.me/${phone}?text=${message}` : '#';
     };
 
@@ -711,7 +711,7 @@ export default function UniFolioUltimate() {
         const animationKeyframes = getAnimationKeyframes(data.config.animationStyle);
         const whatsappLink = getWhatsAppLink();
         const isProfessor = data.config.profileType === 'professor';
-        const salesLink = data.config.salesLink || 'https://unifolio.com';
+        const salesLink = data.config.salesLink || '#';
 
         // Container Style Switcher
         const containerStyle = isMobile
@@ -728,7 +728,7 @@ export default function UniFolioUltimate() {
                         <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
                         <div className="w-3 h-3 rounded-full bg-green-400"></div>
                         <div className="flex-1 text-center text-xs text-gray-500 font-medium bg-white py-1 rounded px-2 mx-4 shadow-sm truncate">
-                            unifolio.com/{data.profile.name.replace(/\s+/g, '').toLowerCase()}
+                            bioacademica.com/{data.profile.name.replace(/\s+/g, '').toLowerCase()}
                         </div>
                     </div>
                 )}
@@ -1123,7 +1123,7 @@ export default function UniFolioUltimate() {
                                 rel="noreferrer"
                                 className="inline-flex items-center gap-1 text-gray-500 hover:text-indigo-700 font-semibold"
                             >
-                                Feito com UniFolio · Quero o meu
+                                Feito com BioAcademica · Quero o meu
                             </a>
                         </div>
                     </div>
@@ -1139,12 +1139,9 @@ export default function UniFolioUltimate() {
         <div className="flex flex-col h-screen bg-slate-50 text-slate-900 font-sans overflow-hidden">
 
             {/* Navbar */}
-            <nav className="bg-white border-b border-gray-200 flex flex-col gap-3 px-4 md:px-6 py-3 md:py-0 shrink-0 z-20 shadow-sm md:shadow-none">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-200">U</div>
-                        <span className="font-bold text-lg text-slate-800">UniFolio <span className="text-[10px] align-top text-indigo-600 bg-indigo-50 px-1.5 rounded">ULTIMATE</span></span>
-                    </div>
+            <nav className="bg-white border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-2 px-4 md:px-6 py-4 md:py-5 shrink-0 z-20 shadow-sm md:shadow-none">
+                <div className="flex items-center justify-between md:justify-start gap-3">
+                    <span className="font-bold text-xl text-slate-800 leading-tight">BioAcademica</span>
                     <div className="flex items-center gap-2 md:hidden">
                         <button
                             onClick={() => { setPreviewMode('mobile'); setShowMobilePreview(true); setShowMobileActions(false); }}
