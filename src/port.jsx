@@ -3,7 +3,7 @@ import {
     Layout, Save, Download, Upload, Plus, Trash2, ExternalLink,
     GraduationCap, Briefcase, User, Share2, Code, Palette,
     Smartphone, Monitor, Settings, Eye, Zap, Layers, Sparkles, PaintBucket,
-    BookOpen, Microscope, Building2, Calendar
+    BookOpen, Microscope, Building2, Calendar, Menu, X, Info
 } from 'lucide-react';
 
 // --- Componentes de UI ---
@@ -90,6 +90,7 @@ const initialData = {
         showFooter: true,
         showEvents: true,
         showContactCTA: true,
+        salesLink: 'https://unifolio.com'
     },
     style: {
         bgType: 'gradient', // gradient, solid
@@ -178,6 +179,9 @@ export default function UniFolioUltimate() {
     const backupInputRef = useRef(null);
     const [eventIndex, setEventIndex] = useState(0);
     const [typedName, setTypedName] = useState('');
+    const [showMobilePreview, setShowMobilePreview] = useState(false);
+    const [showMobileActions, setShowMobileActions] = useState(false);
+    const [showTutorial, setShowTutorial] = useState(false);
 
     // --- Lógica de Imagem (Base64) ---
     const handleImageUpload = (e) => {
@@ -372,6 +376,7 @@ export default function UniFolioUltimate() {
             if (config.avatarShape !== 'modern') return '';
             return `padding: 2px; border-radius: ${modernRadius};`;
         })();
+        const salesLink = config.salesLink || 'https://unifolio.com';
 
         const htmlContent = `
 <!DOCTYPE html>
@@ -615,6 +620,12 @@ export default function UniFolioUltimate() {
           <span class="text-sm font-semibold">Fale comigo</span>
         </a>
         ` : ''}
+
+        <div class="mt-10 mb-6 text-center text-[11px] opacity-60">
+            <a href="${salesLink}" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 text-gray-600 hover:text-indigo-700 font-semibold">
+                Feito com UniFolio · Quero o meu
+            </a>
+        </div>
     </main>
 </body>
 </html>`;
@@ -693,21 +704,22 @@ export default function UniFolioUltimate() {
 
     // --- Render: Preview Component ---
 
-    const Preview = ({ data, mode, showPreloader }) => {
+    const Preview = ({ data, mode, showPreloader, containerClassName = '' }) => {
         const isMobile = mode === 'mobile';
         const bgStyle = getBackgroundCSS();
         const cardStyle = getCardCSS();
         const animationKeyframes = getAnimationKeyframes(data.config.animationStyle);
         const whatsappLink = getWhatsAppLink();
         const isProfessor = data.config.profileType === 'professor';
+        const salesLink = data.config.salesLink || 'https://unifolio.com';
 
         // Container Style Switcher
         const containerStyle = isMobile
-            ? 'w-[390px] max-w-full min-h-[760px] rounded-[2.75rem] border-[10px] border-slate-900 shadow-2xl'
-            : 'w-full max-w-5xl min-h-[760px] rounded-[2rem] border border-gray-200 shadow-xl bg-white';
+            ? 'w-[360px] sm:w-[390px] max-w-full min-h-[620px] sm:min-h-[720px] rounded-[26px] sm:rounded-[2.75rem] border-[10px] border-slate-900 shadow-2xl'
+            : 'w-full max-w-5xl min-h-[720px] rounded-[2rem] border border-gray-200 shadow-xl bg-white';
 
         return (
-            <div className={`transition-all duration-500 ease-in-out mx-auto overflow-hidden relative flex flex-col ${containerStyle}`}>
+            <div className={`transition-all duration-500 ease-in-out mx-auto overflow-hidden relative flex flex-col ${containerStyle} ${containerClassName}`}>
 
                 {/* Desktop Title Bar */}
                 {!isMobile && (
@@ -1103,6 +1115,17 @@ export default function UniFolioUltimate() {
                                 )}
                             </>
                         )}
+
+                        <div className="mt-10 mb-6 text-center text-[11px] opacity-60">
+                            <a
+                                href={salesLink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 text-gray-500 hover:text-indigo-700 font-semibold"
+                            >
+                                Feito com UniFolio · Quero o meu
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -1116,24 +1139,41 @@ export default function UniFolioUltimate() {
         <div className="flex flex-col h-screen bg-slate-50 text-slate-900 font-sans overflow-hidden">
 
             {/* Navbar */}
-            <nav className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-6 shrink-0 z-20">
-                <div className="flex items-center gap-2">
-                    <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-200">U</div>
-                    <span className="font-bold text-lg text-slate-800">UniFolio <span className="text-[10px] align-top text-indigo-600 bg-indigo-50 px-1.5 rounded">ULTIMATE</span></span>
+            <nav className="bg-white border-b border-gray-200 flex flex-col gap-3 px-4 md:px-6 py-3 md:py-0 shrink-0 z-20 shadow-sm md:shadow-none">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-200">U</div>
+                        <span className="font-bold text-lg text-slate-800">UniFolio <span className="text-[10px] align-top text-indigo-600 bg-indigo-50 px-1.5 rounded">ULTIMATE</span></span>
+                    </div>
+                    <div className="flex items-center gap-2 md:hidden">
+                        <button
+                            onClick={() => { setPreviewMode('mobile'); setShowMobilePreview(true); setShowMobileActions(false); }}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-600 text-white shadow-md"
+                        >
+                            <Eye className="w-4 h-4" /> Preview
+                        </button>
+                        <button
+                            onClick={() => setShowMobileActions(prev => !prev)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold border border-gray-200 text-gray-700 bg-gray-50"
+                        >
+                            <Menu className="w-4 h-4" /> Menu
+                        </button>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap justify-end">
+
+                <div className="hidden md:flex items-center gap-2 flex-wrap justify-end">
+                    <div className="flex items-center gap-2 bg-gray-100 border border-gray-200 rounded-full px-2 py-1 shadow-sm">
+                        <span className="text-[11px] font-semibold text-gray-600 px-2">Perfil</span>
+                        <select
+                            className="text-xs bg-white border border-gray-200 rounded-full px-2 py-1 font-semibold text-gray-700 focus:outline-none"
+                            value={data.config.profileType}
+                            onChange={(e) => updateData('config', 'profileType', e.target.value)}
+                        >
+                            <option value="universitario">Universitário</option>
+                            <option value="professor">Professor</option>
+                        </select>
+                    </div>
                     <div className="flex items-center gap-1 bg-gray-100 border border-gray-200 rounded-full px-1.5 py-1 shadow-sm">
-                        <div className="flex items-center gap-2 bg-gray-100 border border-gray-200 rounded-full px-1.5 py-1 shadow-sm">
-                            <span className="text-[11px] font-semibold text-gray-600 px-2">Perfil</span>
-                            <select
-                                className="text-xs bg-white border border-gray-200 rounded-full px-2 py-1 font-semibold text-gray-700 focus:outline-none"
-                                value={data.config.profileType}
-                                onChange={(e) => updateData('config', 'profileType', e.target.value)}
-                            >
-                                <option value="universitario">Universitário</option>
-                                <option value="professor">Professor</option>
-                            </select>
-                        </div>
                         <button
                             onClick={() => setPreviewMode('mobile')}
                             className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 transition-colors ${previewMode === 'mobile' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
@@ -1149,6 +1189,9 @@ export default function UniFolioUltimate() {
                             <Monitor className="w-4 h-4" /> Desktop
                         </button>
                     </div>
+                    <button onClick={() => setShowTutorial(true)} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                        <BookOpen className="w-4 h-4" /> Tutorial
+                    </button>
                     <button onClick={downloadBackup} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                         <Save className="w-4 h-4" /> Salvar backup
                     </button>
@@ -1158,20 +1201,76 @@ export default function UniFolioUltimate() {
                     <button onClick={downloadHTML} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-md hover:shadow-lg transition-all">
                         <Download className="w-4 h-4" /> Baixar Site
                     </button>
-                    <input
-                        ref={backupInputRef}
-                        type="file"
-                        accept="application/json"
-                        className="hidden"
-                        onChange={handleBackupUpload}
-                    />
                 </div>
+
+                <input
+                    ref={backupInputRef}
+                    type="file"
+                    accept="application/json"
+                    className="hidden"
+                    onChange={handleBackupUpload}
+                />
             </nav>
 
-            <div className="flex flex-1 overflow-hidden">
+            {showMobileActions && (
+                <div className="md:hidden bg-white border-b border-gray-200 shadow-sm px-4 pt-3 pb-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                            <Settings className="w-4 h-4 text-indigo-600" /> Ajustes rápidos
+                        </div>
+                        <button onClick={() => setShowMobileActions(false)} className="p-2 rounded-full bg-gray-100 text-gray-600">
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-semibold text-gray-600">Perfil</span>
+                        <select
+                            className="flex-1 text-xs bg-white border border-gray-200 rounded-full px-2 py-2 font-semibold text-gray-700 focus:outline-none"
+                            value={data.config.profileType}
+                            onChange={(e) => updateData('config', 'profileType', e.target.value)}
+                        >
+                            <option value="universitario">Universitário</option>
+                            <option value="professor">Professor</option>
+                        </select>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setPreviewMode('mobile')}
+                            className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 border ${previewMode === 'mobile' ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-700'}`}
+                        >
+                            <Smartphone className="w-4 h-4" /> Celular
+                        </button>
+                        <button
+                            onClick={() => { setPreviewMode('mobile'); setShowMobilePreview(true); setShowMobileActions(false); }}
+                            className="flex-1 px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 bg-indigo-600 text-white shadow"
+                        >
+                            <Eye className="w-4 h-4" /> Ver
+                        </button>
+                        <button
+                            onClick={() => { setShowTutorial(true); setShowMobileActions(false); }}
+                            className="flex-1 px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 border border-gray-200 text-gray-700 bg-white"
+                        >
+                            <BookOpen className="w-4 h-4" /> Tutorial
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        <button onClick={downloadBackup} className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 bg-gray-50">
+                            <Save className="w-4 h-4" /> Backup
+                        </button>
+                        <button onClick={() => backupInputRef.current?.click()} className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 bg-gray-50">
+                            <Upload className="w-4 h-4" /> Carregar
+                        </button>
+                        <button onClick={downloadHTML} className="col-span-2 w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-white bg-indigo-600 shadow">
+                            <Download className="w-4 h-4" /> Baixar site
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            <div className="flex flex-1 flex-col lg:flex-row overflow-hidden">
 
                 {/* Editor Sidebar */}
-                <div className="w-full md:w-[420px] bg-white border-r border-gray-200 overflow-y-auto flex flex-col scrollbar-thin">
+                <div className="w-full lg:w-[420px] bg-white border-r border-gray-200 overflow-y-auto flex flex-col scrollbar-thin">
                     <div className="p-5 space-y-2 pb-20">
 
                         {/* 1. Seção Design */}
@@ -1489,6 +1588,7 @@ export default function UniFolioUltimate() {
                             <div className="space-y-3">
                                 <ToggleSwitch label="Mostrar botão WhatsApp" checked={data.config.showContactCTA} onChange={(v) => updateData('config', 'showContactCTA', v)} />
                                 <InputGroup label="WhatsApp (apenas números, ex: 5511999999999)" value={data.contact.whatsapp} onChange={(v) => updateData('contact', 'whatsapp', v)} />
+                                <InputGroup label="Link da página de vendas" value={data.config.salesLink} onChange={(v) => updateData('config', 'salesLink', v)} />
                             </div>
                         </Section>
 
@@ -1670,13 +1770,118 @@ export default function UniFolioUltimate() {
                 </div>
 
                 {/* Preview Area */}
-                <div className="flex-1 bg-gray-100 relative p-4 md:p-8 overflow-auto">
-                    <div className="min-h-full flex items-center justify-center">
-                        <Preview data={data} mode={previewMode} showPreloader={showPreloaderPreview} />
+                <div className="hidden md:flex flex-1 bg-gray-100 relative p-4 md:p-8 overflow-auto">
+                    <div className="min-h-full flex items-start justify-center w-full">
+                        <Preview data={data} mode={previewMode} showPreloader={showPreloaderPreview} containerClassName="mx-auto" />
                     </div>
                 </div>
 
             </div>
+
+            {/* Floating preview trigger on mobile */}
+            <button
+                onClick={() => { setPreviewMode('mobile'); setShowMobilePreview(true); setShowMobileActions(false); }}
+                className="md:hidden fixed bottom-4 right-4 z-40 flex items-center gap-2 px-4 py-3 rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-200"
+            >
+                <Eye className="w-4 h-4" /> Preview
+            </button>
+
+            {/* Fullscreen preview for small screens */}
+            {showMobilePreview && (
+                <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col">
+                    <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between gap-2 shadow-sm">
+                        <div className="flex items-center gap-2 text-sm font-semibold text-gray-800">
+                            <Eye className="w-4 h-4 text-indigo-600" /> Pré-visualização
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPreviewMode('mobile')}
+                                className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 border ${previewMode === 'mobile' ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-700'}`}
+                            >
+                                <Smartphone className="w-4 h-4" /> Celular
+                            </button>
+                            <button onClick={() => setShowMobilePreview(false)} className="p-2 rounded-full bg-gray-100 text-gray-600">
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex-1 overflow-auto p-3 sm:p-6 bg-gray-100">
+                        <div className="max-w-5xl mx-auto">
+                            <Preview
+                                data={data}
+                                mode={previewMode}
+                                showPreloader={showPreloaderPreview}
+                                containerClassName="max-w-full w-full"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Tutorial modal */}
+            {showTutorial && (
+                <div className="fixed inset-0 z-50 bg-black/55 backdrop-blur-sm flex items-center justify-center px-4 py-6">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                            <div className="flex items-center gap-2">
+                                <Info className="w-5 h-5 text-indigo-600" />
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-800">Tutorial rápido</p>
+                                    <p className="text-xs text-gray-500">Siga os passos para lançar seu portfólio</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setShowTutorial(false)} className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                        <div className="p-5 space-y-3 text-sm text-gray-700 leading-relaxed">
+                            <div className="flex items-start gap-3">
+                                <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-700 text-xs flex items-center justify-center font-bold">1</span>
+                                <div>
+                                    <p className="font-semibold text-gray-800">Assista às aulas do módulo</p>
+                                    <p className="text-gray-600 text-sm">Na área de membros tem o passo a passo para montar tudo.</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-700 text-xs flex items-center justify-center font-bold">2</span>
+                                <div>
+                                    <p className="font-semibold text-gray-800">Monte seu portfólio aqui</p>
+                                    <p className="text-gray-600 text-sm">Preencha dados, imagens e eventos. Use o preview para validar.</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-700 text-xs flex items-center justify-center font-bold">3</span>
+                                <div>
+                                    <p className="font-semibold text-gray-800">Salve o backup</p>
+                                    <p className="text-gray-600 text-sm">Baixe o JSON para continuar editando depois ou em outro device.</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-700 text-xs flex items-center justify-center font-bold">4</span>
+                                <div>
+                                    <p className="font-semibold text-gray-800">Baixe o site</p>
+                                    <p className="text-gray-600 text-sm">Gere o HTML prontinho, já configurado para hospedar onde quiser.</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-700 text-xs flex items-center justify-center font-bold">5</span>
+                                <div>
+                                    <p className="font-semibold text-gray-800">Carregue o backup quando precisar</p>
+                                    <p className="text-gray-600 text-sm">Faça upload do JSON salvo e continue de onde parou.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="px-5 py-4 bg-gray-50 border-t border-gray-100 flex flex-wrap gap-2 justify-end">
+                            <button onClick={() => setShowTutorial(false)} className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100">
+                                Entendi
+                            </button>
+                            <button onClick={() => setShowTutorial(false)} className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg shadow hover:bg-indigo-700">
+                                Voltar para o editor
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
