@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BioAcademica · Página de Vendas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #0b1220;
+      --muted: #94a3b8;
+      --text: #e2e8f0;
+      --accent: #7c3aed;
+      --accent-2: #22d3ee;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Manrope', 'Space Grotesk', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(120% 140% at 80% 0%, rgba(34,211,238,0.18), transparent 55%),
+                  radial-gradient(120% 120% at 10% 20%, rgba(124,58,237,0.22), transparent 50%),
+                  linear-gradient(160deg, #0b1220 0%, #0f172a 50%, #0b1220 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 64px;
+    }
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .hero {
+      margin: 42px 0 36px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      align-items: center;
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(28px, 4vw, 46px);
+      margin: 0 0 12px;
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+    .actions {
+      margin-top: 22px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.25s ease, border-color 0.2s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(120deg, var(--accent) 0%, #6366f1 50%, var(--accent-2) 100%);
+      color: #0b1220;
+      box-shadow: 0 10px 35px rgba(124,58,237,0.35);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+    .sub {
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(124,58,237,0.12);
+      color: #cbd5ff;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    ul {
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .persona {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    }
+    .persona h3 { margin: 0 0 8px; }
+    .step-list {
+      display: grid;
+      gap: 10px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .step .index {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      background: rgba(124,58,237,0.15);
+      color: #cbd5ff;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(124,58,237,0.3);
+    }
+    .cta-final {
+      text-align: center;
+      padding: 28px 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, rgba(124,58,237,0.2), rgba(34,211,238,0.2));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.4);
+    }
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <span style="display:inline-flex;width:12px;height:12px;border-radius:50%;background:linear-gradient(145deg,#7c3aed,#22d3ee);box-shadow:0 0 0 6px rgba(124,58,237,0.12);"></span>
+        <span>BioAcademica</span>
+      </div>
+      <div class="pill">Construtor de bios + mini-sites para educação</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>Transforme seu perfil acadêmico em uma vitrine pronta para contatos.</h1>
+        <p class="lead">BioAcademica é o SaaS que permite criar bios e mini-sites com aparência premium para universitários e professores, com exportação instantânea em HTML, botões de WhatsApp e seções prontas para jornada acadêmica, projetos, aulas e eventos.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#cta">Começar agora</a>
+          <a class="btn btn-ghost" href="#features">Ver funcionalidades</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="badge">Preview rápido</div>
+        <p style="color:#cbd5ff;margin:12px 0 8px;font-weight:600;">Mobile e desktop lado a lado</p>
+        <p style="color:var(--muted);line-height:1.6;">Mude cores, efeitos (Aurora, Prisma, gradientes), estilos de cards (glass, outline, neubrutalism) e animações de entrada em tempo real. Exporte em HTML ou salve como backup JSON.</p>
+        <p style="color:#cbd5ff;margin-top:12px;font-size:13px;">CTA fixo de WhatsApp, preloader opcional, fontes do Google e uploads de avatar/logo/eventos.</p>
+      </div>
+    </section>
+
+    <section id="features" class="card" style="margin-bottom:18px;">
+      <h2>Por que funciona</h2>
+      <p class="sub">Pensado para quem precisa publicar rápido, com estética forte e sem depender de código.</p>
+      <div class="grid-3">
+        <div class="card" style="background:rgba(255,255,255,0.02);">
+          <div class="badge">Universitários</div>
+          <h3 style="margin:10px 0 6px;">Jornada completa</h3>
+          <ul>
+            <li>Seções para jornada acadêmica, estágios, pesquisa & extensão.</li>
+            <li>Links rápidos, projetos, resumos de estudo e eventos.</li>
+            <li>CTA de contato para oportunidades e networking.</li>
+          </ul>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,0.02);">
+          <div class="badge">Professores</div>
+          <h3 style="margin:10px 0 6px;">Autoridade visual</h3>
+          <ul>
+            <li>Graduação, pós, mestrado, doutorado e pós-doc.</li>
+            <li>Cursos extras, palestras, planos de aula, atividades e resumos.</li>
+            <li>Logo da escola e CTA de WhatsApp para aulas e mentorias.</li>
+          </ul>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,0.02);">
+          <div class="badge">Design</div>
+          <h3 style="margin:10px 0 6px;">Efeitos premium</h3>
+          <ul>
+            <li>Fundos: sólido, gradiente, Aurora, Prisma/Mesh.</li>
+            <li>Cards: glass, flat, outline, neubrutalism + opacidade.</li>
+            <li>Animações: Apple reveal, slide, zoom, fade.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-bottom:18px;">
+      <div class="card persona">
+        <h3>O que você consegue publicar</h3>
+        <ul>
+          <li>Mini-site com preloader opcional e domínio amigável no header.</li>
+          <li>Eventos com carrossel, imagem e tags (evento/ação).</li>
+          <li>Avatar com moldura (outline/sombra) e formato orgânico.</li>
+          <li>Rodapé com link de vendas e CTA fixo de WhatsApp.</li>
+          <li>Exportação HTML pronta para hospedar + backup JSON.</li>
+        </ul>
+      </div>
+      <div class="card persona">
+        <h3>Integrações e uploads</h3>
+        <ul>
+          <li>Uploads base64 para avatar, logo da escola e imagens dos eventos.</li>
+          <li>Links externos para GitHub, LinkedIn, Lattes, resumos e planos de aula.</li>
+          <li>Fonts do Google configuráveis; cores globais e botões customizados.</li>
+          <li>CTA de WhatsApp com mensagem pré-preenchida.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" style="margin-bottom:18px;">
+      <h2>Fluxo em 4 passos</h2>
+      <p class="sub">Do zero à publicação em minutos.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="index">1</div>
+          <div>
+            <strong>Escolha o perfil (universitário ou professor).</strong>
+            <div class="sub" style="margin:6px 0 0;">Define seções relevantes (ex.: jornada acadêmica ou pós-doc e planos de aula).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="index">2</div>
+          <div>
+            <strong>Personalize o design.</strong>
+            <div class="sub" style="margin:6px 0 0;">Fundos Aurora/Prisma, estilos de cards, animações, fonte e paleta.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="index">3</div>
+          <div>
+            <strong>Preencha conteúdo e eventos.</strong>
+            <div class="sub" style="margin:6px 0 0;">Links, projetos, pesquisas, palestras, planos de aula, imagens e CTA de WhatsApp.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="index">4</div>
+          <div>
+            <strong>Exporte e publique.</strong>
+            <div class="sub" style="margin:6px 0 0;">Baixe o HTML, hospede em qualquer lugar e mantenha backups JSON para reimportar.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-final" id="cta">
+      <h2 style="margin-bottom:8px;">Pronto para lançar seu perfil?</h2>
+      <p class="sub" style="margin-bottom:18px;">Crie uma bio profissional com CTA de WhatsApp, eventos e seções sob medida para educação.</p>
+      <div class="actions" style="justify-content:center;">
+        <a class="btn btn-primary" href="https://wa.me/">Falar agora</a>
+        <a class="btn btn-ghost" href="#">Ver um exemplo</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

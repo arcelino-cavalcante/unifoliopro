@@ -6,6 +6,22 @@ import {
     BookOpen, Microscope, Building2, Calendar, Menu, X, Info
 } from 'lucide-react';
 
+// --- Helpers ---
+const hexToRgb = (hex) => {
+    if (!hex) return '255, 255, 255';
+    let normalized = hex.replace('#', '');
+    if (normalized.length === 3) {
+        normalized = normalized.split('').map((c) => c + c).join('');
+    }
+    if (normalized.length !== 6) return '255, 255, 255';
+    const r = parseInt(normalized.slice(0, 2), 16);
+    const g = parseInt(normalized.slice(2, 4), 16);
+    const b = parseInt(normalized.slice(4, 6), 16);
+    return `${r}, ${g}, ${b}`;
+};
+
+const withAlpha = (hex, alpha = 1) => `rgba(${hexToRgb(hex)}, ${alpha})`;
+
 // --- Componentes de UI ---
 
 const Section = ({ title, icon: Icon, children, isOpen, onToggle }) => (
@@ -93,7 +109,7 @@ const initialData = {
         salesLink: '#'
     },
     style: {
-        bgType: 'gradient', // gradient, solid
+        bgType: 'gradient', // gradient, solid, aurora, mesh
         bgStart: '#EEF2FF',
         bgEnd: '#C7D2FE',
         textColor: '#1e293b',
@@ -198,9 +214,36 @@ export default function BioAcademicaApp() {
     // --- Lógica de CSS Generators ---
 
     const getBackgroundCSS = () => {
-        const { bgType, bgStart, bgEnd } = data.style;
+        const { bgType, bgStart, bgEnd, buttonColor } = data.style;
         if (bgType === 'solid') return { backgroundColor: bgStart };
-        if (bgType === 'gradient') return { backgroundImage: `linear-gradient(135deg, ${bgStart}, ${bgEnd})` };
+        if (bgType === 'gradient') return { backgroundImage: `linear-gradient(135deg, ${bgStart}, ${bgEnd})`, backgroundColor: bgStart };
+        if (bgType === 'aurora') {
+            return {
+                backgroundColor: bgStart,
+                backgroundImage: `
+                    radial-gradient(circle at 20% 20%, ${withAlpha(bgEnd, 0.55)}, transparent 42%),
+                    radial-gradient(circle at 80% 0%, ${withAlpha(buttonColor, 0.35)}, transparent 38%),
+                    linear-gradient(135deg, ${bgStart}, ${bgEnd})
+                `,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '140% 140%, 120% 120%, cover',
+                backgroundBlendMode: 'screen, screen, normal'
+            };
+        }
+        if (bgType === 'mesh') {
+            return {
+                backgroundColor: bgStart,
+                backgroundImage: `
+                    radial-gradient(60% 60% at 20% 30%, ${withAlpha(buttonColor, 0.28)}, transparent 55%),
+                    radial-gradient(55% 55% at 80% 20%, ${withAlpha(bgEnd, 0.38)}, transparent 50%),
+                    radial-gradient(70% 70% at 50% 80%, ${withAlpha(bgStart, 0.25)}, transparent 60%),
+                    linear-gradient(120deg, ${bgStart}, ${bgEnd})
+                `,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '130% 130%, 120% 120%, 140% 140%, cover',
+                backgroundBlendMode: 'screen, screen, screen, normal'
+            };
+        }
         return {};
     };
 
@@ -208,10 +251,6 @@ export default function BioAcademicaApp() {
         const { cardStyle } = data.config;
         const { cardColor, cardOpacity, textColor } = data.style;
 
-        const hexToRgb = (hex) => {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
-        };
         const rgb = hexToRgb(cardColor);
 
         const baseStyle = {
@@ -350,15 +389,38 @@ export default function BioAcademicaApp() {
             const config = data.config;
 
         let bgCSS = '';
-        if (styles.bgType === 'solid') bgCSS = `background-color: ${styles.bgStart};`;
-        if (styles.bgType === 'gradient') bgCSS = `background-image: linear-gradient(135deg, ${styles.bgStart}, ${styles.bgEnd});`;
+        if (styles.bgType === 'solid') {
+            bgCSS = `background-color: ${styles.bgStart};`;
+        } else if (styles.bgType === 'gradient') {
+            bgCSS = `
+                background-color: ${styles.bgStart};
+                background-image: linear-gradient(135deg, ${styles.bgStart}, ${styles.bgEnd});
+            `;
+        } else if (styles.bgType === 'aurora') {
+            bgCSS = `
+                background-color: ${styles.bgStart};
+                background-image:
+                    radial-gradient(circle at 20% 20%, ${withAlpha(styles.bgEnd, 0.55)}, transparent 42%),
+                    radial-gradient(circle at 80% 0%, ${withAlpha(styles.buttonColor, 0.35)}, transparent 38%),
+                    linear-gradient(135deg, ${styles.bgStart}, ${styles.bgEnd});
+                background-repeat: no-repeat;
+                background-size: 140% 140%, 120% 120%, cover;
+                background-blend-mode: screen, screen, normal;
+            `;
+        } else if (styles.bgType === 'mesh') {
+            bgCSS = `
+                background-color: ${styles.bgStart};
+                background-image:
+                    radial-gradient(60% 60% at 20% 30%, ${withAlpha(styles.buttonColor, 0.28)}, transparent 55%),
+                    radial-gradient(55% 55% at 80% 20%, ${withAlpha(styles.bgEnd, 0.38)}, transparent 50%),
+                    radial-gradient(70% 70% at 50% 80%, ${withAlpha(styles.bgStart, 0.25)}, transparent 60%),
+                    linear-gradient(120deg, ${styles.bgStart}, ${styles.bgEnd});
+                background-repeat: no-repeat;
+                background-size: 130% 130%, 120% 120%, 140% 140%, cover;
+                background-blend-mode: screen, screen, screen, normal;
+            `;
+        }
 
-        const hexToRgb = (hex) => {
-            const r = parseInt(hex.slice(1, 3), 16);
-            const g = parseInt(hex.slice(3, 5), 16);
-            const b = parseInt(hex.slice(5, 7), 16);
-            return `${r}, ${g}, ${b}`;
-        };
         const isProfessor = config.profileType === 'professor';
 
         const avatarShapeStyle = (() => {
@@ -434,7 +496,7 @@ export default function BioAcademicaApp() {
 
       #preloader {
         position: fixed; inset: 0; z-index: 9999;
-        background: ${styles.bgType === 'solid' ? styles.bgStart : '#ffffff'};
+        background: ${styles.bgType === 'solid' ? styles.bgStart : `linear-gradient(135deg, ${styles.bgStart}, ${styles.bgEnd})`};
         display: flex; align-items: center; justify-content: center;
         transition: opacity 0.6s ease;
       }
@@ -1276,18 +1338,23 @@ export default function BioAcademicaApp() {
                             <div className="mb-6">
                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block">Fundo da Página</label>
                                 <div className="grid grid-cols-2 gap-2 mb-3">
-                                    {['gradient', 'solid'].map(t => (
+                                    {[
+                                        { key: 'gradient', label: 'Gradiente' },
+                                        { key: 'solid', label: 'Sólido' },
+                                        { key: 'aurora', label: 'Aurora' },
+                                        { key: 'mesh', label: 'Prisma' },
+                                    ].map(t => (
                                         <button
-                                            key={t} onClick={() => updateData('style', 'bgType', t)}
-                                            className={`h-10 rounded border transition-all capitalize text-xs font-medium ${data.style.bgType === t ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-gray-200 hover:bg-gray-50'}`}
+                                            key={t.key} onClick={() => updateData('style', 'bgType', t.key)}
+                                            className={`h-10 rounded border transition-all capitalize text-xs font-medium ${data.style.bgType === t.key ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-gray-200 hover:bg-gray-50'}`}
                                         >
-                                            {t === 'gradient' ? 'Gradiente' : 'Sólido'}
+                                            {t.label}
                                         </button>
                                     ))}
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
                                     <ColorPicker label="Cor Inicial" value={data.style.bgStart} onChange={(v) => updateData('style', 'bgStart', v)} />
-                                    {data.style.bgType === 'gradient' && <ColorPicker label="Cor Final" value={data.style.bgEnd} onChange={(v) => updateData('style', 'bgEnd', v)} />}
+                                    {['gradient', 'aurora', 'mesh'].includes(data.style.bgType) && <ColorPicker label="Cor Final" value={data.style.bgEnd} onChange={(v) => updateData('style', 'bgEnd', v)} />}
                                 </div>
                             </div>
 
